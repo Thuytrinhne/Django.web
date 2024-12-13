@@ -9,51 +9,585 @@
     {% load static %}
     <link href="{% static 'css/common.css' %}" rel="stylesheet">
     <link href="{% static 'css/modelling.css' %}" rel="stylesheet">
+    <style>
+    /* Màu chủ đạo */
+    :root {
+        --primary-light: #f7dd67;
+        --primary: #eec73b;
+        --primary-dark: #d89810;
+    }
+
+    /* Style cho prediction result */
+    .prediction-result {
+        background: var(--primary-light);
+        box-shadow: 0 4px 15px rgba(216, 152, 16, 0.15);
+    }
+
+    /* Style cho form controls khi focus */
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(238, 199, 59, 0.25);
+    }
+
+    /* Style cho range slider */
+    .form-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--primary);
+        border: 2px solid #fff;
+        box-shadow: 0 0 2px rgba(0,0,0,0.2);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .form-range::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--primary);
+        border: 2px solid #fff;
+        box-shadow: 0 0 2px rgba(0,0,0,0.2);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    /* Hover effect */
+    .form-range::-webkit-slider-thumb:hover {
+        background: var(--primary-dark);
+        transform: scale(1.1);
+    }
+
+    .form-range::-moz-range-thumb:hover {
+        background: var(--primary-dark);
+        transform: scale(1.1);
+    }
+
+    /* Track style */
+    .form-range::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 6px;
+        background: #e9ecef;
+        border-radius: 3px;
+    }
+
+    .form-range::-moz-range-track {
+        width: 100%;
+        height: 6px;
+        background: #e9ecef;
+        border-radius: 3px;
+    }
+
+    /* Focus styles */
+    .form-range:focus::-webkit-slider-thumb {
+        box-shadow: 0 0 0 3px rgba(238, 199, 59, 0.25);
+    }
+
+    .form-range:focus::-moz-range-thumb {
+        box-shadow: 0 0 0 3px rgba(238, 199, 59, 0.25);
+    }
+
+    /* Style cho hover effects */
+    .form-control:hover, .form-select:hover {
+        border-color: var(--primary-dark);
+    }
+
+    /* Style cho section container hover */
+    .section-container:hover {
+        box-shadow: rgba(216, 152, 16, 0.15) 0px 8px 24px;
+    }
+
+    /* Style cho button */
+    .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        color: #000;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+        color: #000;
+    }
+
+    /* Style cho active nav link */
+    .nav-link.active {
+        color: var(--primary-dark) !important;
+    }
+
+    .nav-link:hover {
+        color: var(--primary) !important;
+    }
+
+    .nav-link.active::after {
+        background-color: var(--primary-dark);
+    }
+
+    /* Style cho range value input focus */
+    .range-value-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(238, 199, 59, 0.25);
+    }
+
+    .summary-label {
+        color: #6c757d;  /* Bootstrap's text-muted color */
+        font-weight: normal;
+    }
+
+    /* Thêm style cho phần Input Summary */
+    .input-summary {
+        border-top: 1px solid #dee2e6;
+        margin-top: 1.5rem;
+        padding: 1.5rem;
+        padding-top: 0;
+    }
+
+    .input-summary .row {
+        --bs-gutter-x: 2rem;  /* Tăng khoảng cách giữa các cột */
+    }
+
+    /* Style cho tiêu đề và nút toggle */
+    .summary-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+    }
+
+    .summary-header:hover {
+        color: var(--primary-dark);
+    }
+
+    .summary-header i {
+        transition: transform 0.3s ease;
+        font-size: 1.5rem;  /* Tăng kích thước icon */
+        color: black;  /* Màu vàng đậm */
+        font-weight: bold;
+    }
+
+    /* Style cho header khi hover */
+    .summary-header:hover i {
+        color: var(--primary);  /* Màu vàng nhạt hơn khi hover */
+    }
+
+    /* Animation xoay icon */
+    .summary-header[aria-expanded="true"] i {
+        transform: rotate(180deg);
+    }
+
+    /* Style cho phần kết quả dự đoán */
+    .prediction-result {
+        text-align: center;
+        padding: 2rem;
+        background: lvar(--primary);
+        border-radius: 15px;
+        color: #2C1810;  /* Màu chữ tối */
+        box-shadow: 0 4px 15px rgba(216, 152, 16, 0.2);
+    }
+
+    .prediction-result h3 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        font-weight: 600;
+    }
+
+    .prediction-result .age-value {
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.5);  /* Background trong suốt hơn */
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        color: #2C1810;  /* Màu chữ tối */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .prediction-message {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        font-size: 1.1rem;
+        color: #2C1810;  /* Màu chữ tối */
+    }
+
+    .prediction-icon {
+        font-size: 1.8rem;
+        margin-right: 0.5rem;
+        color: #2C1810;  /* Màu icon tối */
+    }
+
+    /* Thêm animation cho kết quả */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .prediction-result {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    /* Style cho error message */
+    .error-feedback {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-control.is-invalid,
+    .form-select.is-invalid {
+        border-color: #dc3545;
+        padding-right: calc(1.5em + 0.75rem);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right calc(0.375em + 0.1875rem) center;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+    }
+
+    .form-control.is-invalid:focus,
+    .form-select.is-invalid:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+
+    /* Style cho tiêu đề section (h2) */
+    .text-xl.font-semibold {
+        color: #212529;
+        font-size: 1.55rem;  /* Tăng font size lớn hơn */
+        margin-bottom: 1.5rem;  /* Tăng margin bottom */
+        font-weight: 600;
+        padding-bottom: 0.75rem;  /* Tăng padding bottom */
+        border-bottom: 2px solid #f8f9fa;
+        letter-spacing: -0.5px;  /* Thêm letter spacing */
+    }
+
+    /* Tăng khoảng cách giữa các section */
+    .mb-4 {
+        margin-bottom: 2.5rem !important;
+    }
+
+    /* Style cho form labels */
+    .form-label {
+        color: #313131;
+        font-weight: normal;
+        font-size: 1.0rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Style cho input fields */
+    .form-control, .form-select {
+        border: 1px solid #ced4da;  /* Màu border đậm hơn */
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #98DDA0;  /* Màu border khi focus khớp với theme */
+        box-shadow: 0 0 0 0.2rem rgba(152, 221, 160, 0.25);  /* Shadow nhẹ khi focus */
+    }
+
+    /* Style cho range value input */
+    .range-value-input {
+        border: 1px solid #ced4da;
+        font-weight: 500;  /* Làm đậm số */
+        width: 70px;
+        text-align: center;
+    }
+
+    .range-value-input:focus {
+        border-color: #98DDA0;
+        box-shadow: 0 0 0 0.2rem rgba(152, 221, 160, 0.25);
+    }
+
+    /* Hover effect cho input */
+    .form-control:hover, .form-select:hover {
+        border-color: #adb5bd;  /* Màu đậm hơn khi hover */
+    }
+
+    /* Style cho range input group */
+    .range-input-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .range-input-group .form-range {
+        flex: 1;
+    }
+
+    /* Style cho summary labels */
+    .summary-label {
+        color: #495057;
+        font-weight: normal;
+    }
+
+    /* Style cho section container */
+    .section-container {
+        border: 1px solid #e0dbdb;
+        border-radius: 15px;
+        padding: 18px;
+        background-color: #fff;
+        box-shadow: rgba(149, 157, 165, 0.1) 0px 4px 12px;  /* Shadow nhẹ nhàng */
+        transition: box-shadow 0.3s ease;  /* Hiệu ứng mượt khi hover */
+    }
+
+    /* Hover effect cho section */
+    .section-container:hover {
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;  /* Shadow đậm hơn khi hover */
+    }
+
+    /* Điều chỉnh margin cho tiêu đề trong section */
+    .section-container .text-xl.font-semibold {
+        margin-bottom: 1.25rem;
+    }
+
+    /* Điều chỉnh padding cho row trong section */
+    .section-container .row {
+        padding: 0 0.5rem;
+    }
+
+    /* Style cho tiêu đề form */
+    .form-title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        color: #212529;
+    }
+
+    /* Style cho loading dots animation */
+    .loading-dots {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .loading-dots .dot {
+        width: 5px;
+        height: 5px;
+        margin: 0 2px;
+        background: currentColor;
+        border-radius: 50%;
+        animation: dot-flashing 1s infinite linear alternate;
+    }
+
+    .loading-dots .dot:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .loading-dots .dot:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    /* Style cho loading text */
+    .loading-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    @keyframes dot-flashing {
+        0% {
+            opacity: 0.2;
+            transform: scale(0.8);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Style cho button khi loading/disabled */
+    .btn:disabled {
+        cursor: not-allowed !important;
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: #fff !important;
+        opacity: 0.65;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Hiệu ứng hover cho button */
+    .btn-primary:not(:disabled):hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(216, 152, 16, 0.2);
+    }
+ 
+    </style>
 </head>
 <body>
     {% include 'includes/header.html' %}
 
     <div class="container mt-5">
+        {% if prediction_result %}
+        <div class="alert alert-success mb-4" style="background: white; border: none; padding: 0;">
+            <div class="prediction-result mb-4">
+                <h3>
+                    <i class="bi bi-calendar-heart prediction-icon"></i>
+                    Predicted Age: <span class="age-value">{{ prediction_result }} </span> years
+                </h3>
+                {% if prediction_message %}
+                <div class="prediction-message">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>{{ prediction_message }}</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="input-summary">
+                <div class="summary-header" data-bs-toggle="collapse" data-bs-target="#inputSummary" style="cursor: pointer;">
+                    <h4 class="font-semibold mb-0">Input Summary</h4>
+                    <i class="bi bi-chevron-down ms-2"></i>
+                </div>
+                <div class="collapse" id="inputSummary">
+                    <div class="row">
+                        <!-- Personal Information -->
+                        <div class="col-md-4">
+                            <h5 class="font-semibold mb-2">Personal Information</h5>
+                            <p><span class="summary-label">Gender:</span> {{ form_data.gender }}</p>
+                            <p><span class="summary-label">Height:</span> {{ form_data.height }} cm</p>
+                            <p><span class="summary-label">Weight:</span> {{ form_data.weight }} kg</p>
+                        </div>
+
+                        <!-- Health Metrics -->
+                        <div class="col-md-4">
+                            <h5 class="font-semibold mb-2">Health Metrics</h5>
+                            <p><span class="summary-label">Blood Pressure:</span> {{ form_data.bloodPressure }}</p>
+                            <p><span class="summary-label">Cholesterol:</span> {{ form_data.cholesterol }} mg/dL</p>
+                            <p><span class="summary-label">BMI:</span> {{ form_data.bmi }}</p>
+                            <p><span class="summary-label">Blood Glucose:</span> {{ form_data.bloodGlucose }} mg/dL</p>
+                            <p><span class="summary-label">Bone Density:</span> {{ form_data.boneDensity }} g/cm²</p>
+                            <p><span class="summary-label">Vision:</span> {{ form_data.visionSharpness }}</p>
+                            <p><span class="summary-label">Hearing:</span> {{ form_data.hearingAbility }} dB</p>
+                        </div>
+
+                        <!-- Lifestyle Factors -->
+                        <div class="col-md-4">
+                            <h5 class="font-semibold mb-2">Lifestyle Factors</h5>
+                            <p><span class="summary-label">Physical Activity:</span> {{ form_data.physicalActivity }}</p>
+                            <p><span class="summary-label">Smoking Status:</span> {{ form_data.smokingStatus }}</p>
+                            <p><span class="summary-label">Alcohol Consumption:</span> {{ form_data.alcoholConsumption }}</p>
+                            <p><span class="summary-label">Diet:</span> {{ form_data.diet }}</p>
+                        </div>
+
+                        <!-- Medical History -->
+                        <div class="col-md-4">
+                            <h5 class="font-semibold mb-2 mt-3">Medical History</h5>
+                            <p><span class="summary-label">Chronic Diseases:</span> {{ form_data.chronicDiseases }}</p>
+                            <p><span class="summary-label">Medication Use:</span> {{ form_data.medicationUse }}</p>
+                            <p><span class="summary-label">Family History:</span> {{ form_data.familyHistory }}</p>
+                        </div>
+
+                        <!-- Cognitive and Mental Health -->
+                        <div class="col-md-4">
+                            <h5 class="font-semibold mb-2 mt-3">Cognitive & Mental Health</h5>
+                            <p><span class="summary-label">Cognitive Function:</span> {{ form_data.cognitiveFunction }}</p>
+                            <p><span class="summary-label">Mental Health:</span> {{ form_data.mentalHealthStatus }}</p>
+                            <p><span class="summary-label">Sleep Pattern:</span> {{ form_data.sleepPatterns }}</p>
+                        </div>
+
+                        <!-- Environmental & Socioeconomic -->
+                        <div class="col-md-4">
+                            <h5 class="font-semibold mb-2 mt-3">Environmental & Social</h5>
+                            <p><span class="summary-label">Stress Level:</span> {{ form_data.stressLevels }}</p>
+                            <p><span class="summary-label">Pollution Exposure:</span> {{ form_data.pollutionExposure }}</p>
+                            <p><span class="summary-label">Sun Exposure:</span> {{ form_data.sunExposure }}</p>
+                            <p><span class="summary-label">Education:</span> {{ form_data.educationLevel }}</p>
+                            <p><span class="summary-label">Income Level:</span> {{ form_data.incomeLevel }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if error_message %}
+        <div class="alert alert-danger text-center mb-4">
+            {{ error_message }}
+        </div>
+        {% endif %}
         <form class="modeling-form space-y-8 max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg" 
-              action="{% url 'predict' %}" 
+              action="" 
               method="POST">
             {% csrf_token %}
-            <h1 class="text-2xl font-bold mb-6">Health Modeling Form</h1>
+            <h1 class="form-title">Health Modeling Form</h1>
 
             <!-- Personal Information -->
-            <div class="mb-4">
-                <h2 class="text-xl font-semibold mb-3">Personal Information</h2>
+            <div class="mb-4 section-container">
+                <h2 class="text-xl font-semibold">Personal Information</h2>
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label class="form-label">Gender</label>
-                        <select class="form-select" name="gender" required>
+                        <select class="form-select {% if errors.gender %}is-invalid{% endif %}" 
+                                name="gender" required>
                             <option value="">Select gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="Female" {% if form_data.gender == "Female" %}selected{% endif %}>Female</option>
+                            <option value="Male" {% if form_data.gender == "Male" %}selected{% endif %}>Male</option>
                         </select>
+                        {% if errors.gender %}
+                        <div class="error-feedback">{{ errors.gender }}</div>
+                        {% endif %}
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Height (cm)</label>
-                        <input type="number" class="form-control" name="height" step="0.01" required>
+                        <input type="number" 
+                               class="form-control {% if errors.height %}is-invalid{% endif %}" 
+                               name="height" 
+                               step="0.01" 
+                               required 
+                               value="{{ form_data.height|default:'' }}">
+                        {% if errors.height %}
+                        <div class="error-feedback">{{ errors.height }}</div>
+                        {% endif %}
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Weight (kg)</label>
-                        <input type="number" class="form-control" name="weight" step="0.01" required>
+                        <input type="number" 
+                               class="form-control {% if errors.weight %}is-invalid{% endif %}" 
+                               name="weight" 
+                               step="0.01" 
+                               required
+                               value="{{ form_data.weight|default:'' }}">
+                        {% if errors.weight %}
+                        <div class="error-feedback">{{ errors.weight }}</div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
 
             <!-- Health Metrics -->
-            <div class="mb-4">
-                <h2 class="text-xl font-semibold mb-3">Health Metrics</h2>
+            <div class="mb-4 section-container">
+                <h2 class="text-xl font-semibold">Health Metrics</h2>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Blood Pressure (s/d)</label>
-                        <input type="text" class="form-control" name="bloodPressure" placeholder="e.g., 120/80" required>
+                        <input type="text" 
+                               class="form-control {% if errors.bloodPressure %}is-invalid{% endif %}" 
+                               name="bloodPressure" 
+                               placeholder="e.g., 120/80" 
+                               required
+                               value="{{ form_data.bloodPressure|default:'' }}">
+                        {% if errors.bloodPressure %}
+                        <div class="error-feedback">{{ errors.bloodPressure }}</div>
+                        {% endif %}
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Cholesterol Level (mg/dL)</label>
-                        <input type="number" class="form-control" name="cholesterol" step="0.01" required>
+                        <input type="number" class="form-control" name="cholesterol" step="0.01" required
+                               value="{{ form_data.cholesterol|default:'' }}">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">BMI</label>
@@ -79,161 +613,192 @@
             </div>
 
             <!-- Lifestyle Factors -->
-            <div class="mb-4">
-                <h2 class="text-xl font-semibold mb-3">Lifestyle Factors</h2>
+            <div class="mb-4 section-container">
+                <h2 class="text-xl font-semibold">Lifestyle Factors</h2>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Physical Activity Level</label>
                         <select class="form-select" name="physicalActivity" required>
                             <option value="">Select level</option>
-                            <option value="low">Low</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="high">High</option>
+                            <option value="Low" {% if form_data.physicalActivity == "Low" %}selected{% endif %}>Low</option>
+                            <option value="Moderate" {% if form_data.physicalActivity == "Moderate" %}selected{% endif %}>Moderate</option>
+                            <option value="High" {% if form_data.physicalActivity == "High" %}selected{% endif %}>High</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Smoking Status</label>
                         <select class="form-select" name="smokingStatus" required>
                             <option value="">Select status</option>
-                            <option value="never">Never</option>
-                            <option value="former">Former</option>
-                            <option value="current">Current</option>
+                            <option value="Never">Never</option>
+                            <option value="Former">Former</option>
+                            <option value="Current">Current</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Alcohol Consumption</label>
                         <select class="form-select" name="alcoholConsumption" required>
                             <option value="">Select consumption</option>
-                            <option value="none">None</option>
-                            <option value="occasional">Occasional</option>
-                            <option value="frequent">Frequent</option>
+                            <option value="Never">Never</option>
+                            <option value="Occasional">Occasional</option>
+                            <option value="Frequent">Frequent</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Diet</label>
                         <select class="form-select" name="diet" required>
                             <option value="">Select diet</option>
-                            <option value="balanced">Balanced</option>
-                            <option value="vegetarian">Vegetarian</option>
-                            <option value="low-carb">Low-carb</option>
-                            <option value="high-fat">High-fat</option>
+                            <option value="Balanced">Balanced</option>
+                            <option value="High-fat">High-fat</option>
+                            <option value="Low-fat">Low-fat</option>
+                            <option value="Vegetarian">Vegetarian</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <!-- Medical History -->
-            <div class="mb-4">
-                <h2 class="text-xl font-semibold mb-3">Medical History</h2>
+            <div class="mb-4 section-container">
+                <h2 class="text-xl font-semibold">Medical History</h2>
                 <div class="row g-3">
                     <div class="col-md-12">
                         <label class="form-label">Chronic Diseases</label>
-                        <textarea class="form-control" name="chronicDiseases" rows="2" required></textarea>
+                        <select class="form-select" name="chronicDiseases" required>
+                            <option value="None">None</option>
+                            <option value="Hypertension">Hypertension</option>
+                            <option value="Diabetes">Diabetes</option>
+                            <option value="Heart Disease">Heart Disease</option>
+                        </select>
                     </div>
                     <div class="col-md-12">
                         <label class="form-label">Medication Use</label>
-                        <textarea class="form-control" name="medicationUse" rows="2" required></textarea>
+                        <select class="form-select" name="medicationUse" required>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
                     </div>
                     <div class="col-md-12">
                         <label class="form-label">Family History</label>
-                        <textarea class="form-control" name="familyHistory" rows="2" required></textarea>
+                        <select class="form-select" name="familyHistory" required>
+                            <option value="None">None</option>
+                            <option value="Diabetes">Diabetes</option>
+                            <option value="Heart Disease">Heart Disease</option>
+                        </select>
                     </div>
                 </div>
             </div>
 
             <!-- Cognitive and Mental Health -->
-            <div class="mb-4">
-                <h2 class="text-xl font-semibold mb-3">Cognitive and Mental Health</h2>
+            <div class="mb-4 section-container">
+                <h2 class="text-xl font-semibold">Cognitive and Mental Health</h2>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Cognitive Function (0-100)</label>
-                        <input type="range" class="form-range" name="cognitiveFunction" min="0" max="100" step="1" required>
-                        <output class="d-block text-center mt-2" for="cognitiveFunction">50</output>
+                        <div class="range-input-group">
+                            <input type="range" class="form-range" name="cognitiveFunction" 
+                                   min="0" max="100" step="1" required
+                                   value="{{ form_data.cognitiveFunction|default:'50' }}">
+                            <input type="number" class="form-control range-value-input" 
+                                   value="{{ form_data.cognitiveFunction|default:'50' }}"
+                                   min="0" max="100" step="1">
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Mental Health Status</label>
                         <select class="form-select" name="mentalHealthStatus" required>
                             <option value="">Select status</option>
-                            <option value="excellent">Excellent</option>
-                            <option value="good">Good</option>
-                            <option value="fair">Fair</option>
-                            <option value="poor">Poor</option>
+                            <option value="Poor">Poor</option>
+                            <option value="Fair">Fair</option>
+                            <option value="Good">Good</option>
+                            <option value="Excellent">Excellent</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Sleep Patterns</label>
                         <select class="form-select" name="sleepPatterns" required>
                             <option value="">Select pattern</option>
-                            <option value="normal">Normal</option>
-                            <option value="insomnia">Insomnia</option>
-                            <option value="excessive">Excessive</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Insomnia">Insomnia</option>
+                            <option value="Sleep Apnea">Sleep Apnea</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <!-- Environmental Factors -->
-            <div class="mb-4">
-                <h2 class="text-xl font-semibold mb-3">Environmental Factors</h2>
+            <div class="mb-4 section-container">
+                <h2 class="text-xl font-semibold">Environmental Factors</h2>
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label class="form-label">Stress Levels (0-10)</label>
-                        <input type="range" class="form-range" name="stressLevels" min="0" max="10" step="0.1" required>
-                        <output class="d-block text-center mt-2" for="stressLevels">5</output>
+                        <div class="range-input-group">
+                            <input type="range" class="form-range" name="stressLevels" min="0" max="10" step="0.1" required
+                                   value="{{ form_data.stressLevels|default:'5' }}">
+                            <input type="number" class="form-control range-value-input" 
+                                   value="{{ form_data.stressLevels|default:'5' }}"
+                                   min="0" max="10" step="0.1">
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Pollution Exposure (0-10)</label>
-                        <input type="range" class="form-range" name="pollutionExposure" min="0" max="10" step="0.1" required>
-                        <output class="d-block text-center mt-2" for="pollutionExposure">5</output>
+                        <div class="range-input-group">
+                            <input type="range" class="form-range" name="pollutionExposure" min="0" max="10" step="0.1" required
+                                   value="{{ form_data.pollutionExposure|default:'5' }}">
+                            <input type="number" class="form-control range-value-input" 
+                                   value="{{ form_data.pollutionExposure|default:'5' }}"
+                                   min="0" max="10" step="0.1">
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Sun Exposure (0-12)</label>
-                        <input type="range" class="form-range" name="sunExposure" min="0" max="12" step="0.1" required>
-                        <output class="d-block text-center mt-2" for="sunExposure">6</output>
+                        <div class="range-input-group">
+                            <input type="range" class="form-range" name="sunExposure" min="0" max="12" step="0.1" required
+                                   value="{{ form_data.sunExposure|default:'6' }}">
+                            <input type="number" class="form-control range-value-input" 
+                                   value="{{ form_data.sunExposure|default:'6' }}"
+                                   min="0" max="12" step="0.1">
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Socioeconomic Factors -->
-            <div class="mb-4">
-                <h2 class="text-xl font-semibold mb-3">Socioeconomic Factors</h2>
+            <div class="mb-4 section-container">
+                <h2 class="text-xl font-semibold">Socioeconomic Factors</h2>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Education Level</label>
                         <select class="form-select" name="educationLevel" required>
                             <option value="">Select level</option>
-                            <option value="highSchool">High School</option>
-                            <option value="undergraduate">Undergraduate</option>
-                            <option value="postgraduate">Postgraduate</option>
+                            <option value="High School">High School</option>
+                            <option value="Undergraduate">Undergraduate</option>
+                            <option value="Graduate">Graduate</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Income Level</label>
                         <select class="form-select" name="incomeLevel" required>
                             <option value="">Select level</option>
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            {% if prediction_result %}
-            <div class="alert alert-success text-center mb-4">
-                <h3 class="font-bold">Predicted Age: {{ prediction_result }} years</h3>
-            </div>
-            {% endif %}
-
-            {% if error_message %}
-            <div class="alert alert-danger text-center mb-4">
-                {{ error_message }}
-            </div>
-            {% endif %}
-
             <!-- Submit Button -->
             <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg px-5">Predict</button>
+                <button type="submit" class="btn btn-primary btn-lg px-5 text-white" id="predictBtn">
+                    <span class="normal-text">Predict</span>
+                    <span class="loading-text d-none">
+                        Predicting
+                        <span class="loading-dots ms-2">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </span>
+                </button>
             </div>
         </form>
     </div>
@@ -241,6 +806,101 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% load static %}
     <script src="{% static 'js/common.js' %}"></script>
-    <script src="{% static 'js/modelling.js' %}"></script>
+    <script>
+    $(document).ready(function() {
+        // Initialize Selectize for dropdown fields
+        $('select').selectize({
+            sortField: 'text'
+        });
+    });
+
+    // Handle summary header toggle
+    document.querySelector('.summary-header').addEventListener('click', function() {
+        const icon = this.querySelector('i');
+        if (icon.classList.contains('bi-chevron-up')) {
+            icon.classList.replace('bi-chevron-up', 'bi-chevron-down');
+        } else {
+            icon.classList.replace('bi-chevron-down', 'bi-chevron-up');
+        }
+    });
+
+    // Handle range input groups
+    document.querySelectorAll('.range-input-group').forEach(function(group) {
+        const rangeInput = group.querySelector('.form-range');
+        const valueInput = group.querySelector('.range-value-input');
+
+        // Đồng bộ giá trị ban đầu
+        valueInput.value = rangeInput.value;
+
+        // Cập nhật input khi kéo slider
+        rangeInput.addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            valueInput.value = value;
+        });
+
+        // Cập nhật slider khi nhập số
+        valueInput.addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            const min = parseFloat(rangeInput.min);
+            const max = parseFloat(rangeInput.max);
+            const step = parseFloat(rangeInput.step) || 1;
+
+            // Chỉ cập nhật khi là số hợp lệ
+            if (!isNaN(value)) {
+                // Giới hạn trong khoảng min-max
+                const limitedValue = Math.min(Math.max(value, min), max);
+                // Làm tròn theo step
+                const roundedValue = Math.round(limitedValue / step) * step;
+                
+                // Cập nhật cả hai input
+                rangeInput.value = roundedValue;
+                this.value = roundedValue;
+            }
+        });
+
+        // Xử lý khi blur khỏi input
+        valueInput.addEventListener('blur', function() {
+            const value = parseFloat(this.value);
+            const min = parseFloat(rangeInput.min);
+            const max = parseFloat(rangeInput.max);
+            const step = parseFloat(rangeInput.step) || 1;
+
+            let finalValue;
+            if (isNaN(value) || value < min) {
+                finalValue = min;
+            } else if (value > max) {
+                finalValue = max;
+            } else {
+                // Làm tròn theo step
+                finalValue = Math.round(value / step) * step;
+            }
+
+            // Cập nhật cả hai input với giá trị cuối cùng
+            this.value = finalValue;
+            rangeInput.value = finalValue;
+        });
+    });
+
+    // Handle form submission and loading state
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const button = document.getElementById('predictBtn');
+        const normalText = button.querySelector('.normal-text');
+        const loadingText = button.querySelector('.loading-text');
+        
+        // Disable button và hiện loading
+        button.disabled = true;
+        normalText.classList.add('d-none');
+        loadingText.classList.remove('d-none');
+        
+        // Nếu có lỗi thì enable lại button sau 3s
+        setTimeout(() => {
+            if (document.querySelector('.alert-danger')) {
+                button.disabled = false;
+                normalText.classList.remove('d-none');
+                loadingText.classList.add('d-none');
+            }
+        }, 3000);
+    });
+    </script>
 </body>
 </html>

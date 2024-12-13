@@ -59,3 +59,102 @@ body {
     background-color: #f8f9fa;
     border-radius: 5px;
 } 
+
+/* Màu chủ đạo */
+:root {
+    --primary-light: #f7dd67;
+    --primary: #eec73b;
+    --primary-dark: #d89810;
+}
+
+/* Style cho primary button */
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:not(:disabled):hover,
+.btn-primary:not(:disabled):focus,
+.btn-primary:not(:disabled):active {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(216, 152, 16, 0.2);
+}
+
+/* Style cho loading animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinner-border {
+    width: 1.2rem;
+    height: 1.2rem;
+    vertical-align: -0.125em;
+    border: 0.2em solid currentColor;
+    border-right-color: transparent;
+}
+
+/* Style cho loading dots */
+.loading-dots {
+    display: inline-flex;
+    align-items: center;
+}
+
+.loading-dots .dot {
+    width: 5px;
+    height: 5px;
+    margin: 0 2px;
+    background: currentColor;
+    border-radius: 50%;
+    animation: dot-flashing 1s infinite linear alternate;
+}
+
+.loading-dots .dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loading-dots .dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* Style cho loading text */
+.loading-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+@keyframes dot-flashing {
+    0% {
+        opacity: 0.2;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Style cho button khi loading/disabled */
+.btn:disabled {
+    cursor: not-allowed !important;
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #fff !important;
+    opacity: 0.65;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Hiệu ứng hover cho button */
+.btn-primary:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(216, 152, 16, 0.2);
+} 
