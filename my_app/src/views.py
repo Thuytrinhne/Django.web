@@ -69,7 +69,7 @@ def register_view(request):
                 'password': password
             })
             
-            if response.status_code == 200:
+            if response.status_code == 201:
                 # Parse successful response
                 data = response.json()
                 user = data.get('user', {})
@@ -81,9 +81,8 @@ def register_view(request):
                 
                 # Render trang với thông báo thành công trước khi redirect
                 return render(request, 'register.html', {
-                    'success_message': 'User registered successfully',
-                    'redirect_url': reverse('home')
-                })
+                    'success_message': 'User registered successfully. '
+                                                    })
             else:
                 # Handle error response
                 error_data = response.json()

@@ -3,7 +3,9 @@
 <header class="header fixed-top">
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="/">Your Logo</a>
+            <a class="navbar-brand" href="/"> <img src="{% static 'images/logo.jpg' %}" 
+                alt="Logo" 
+                style="max-height: 45px; width: auto;"><strong class="p-2 text-dark">Tobi</strong></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -222,7 +224,7 @@
     display: inline-block;
 }
 
-/* Hoặc có thể dùng font icon thay vì emoji */
+/* Hoặc có thể dùng font icon thay v�� emoji */
 .nav-item .nav-link.active::before {
     font-family: "bootstrap-icons";
     margin-right: 8px;
@@ -239,5 +241,19 @@
 
 .nav-item .nav-link[href="/modelling"].active::before {
     content: "\F52D";  /* Search icon */
+}
+
+/* Style cho logo */
+.navbar-brand {
+    padding: 0;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+
+
+.navbar-brand:hover img {
+    transform: scale(1.05);
 }
 </style> 

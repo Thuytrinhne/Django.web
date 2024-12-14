@@ -1,0 +1,155 @@
+{% load static %}
+
+<footer class="footer bg-dark text-light pt-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <!-- Team Members -->
+            <div class="col-lg-6 mb-4">
+                <h5 class="text-white mb-4">Our Team Members</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled team-members">
+                            <li class="mb-2">
+                                <i class="bi bi-person-circle me-2"></i>
+                                <span>Nguyễn Anh Tuấn Ngọc</span>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-person-circle me-2"></i>
+                                <span>Nguyễn Thị Thùy Trinh</span>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-person-circle me-2"></i>
+                                <span>Nguyễn Văn Hiển</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled team-members">
+                            <li class="mb-2">
+                                <i class="bi bi-person-circle me-2"></i>
+                                <span>Lê Quốc Anh</span>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-person-circle me-2"></i>
+                                <span>Đinh Nguyên Minh Hải</span>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-person-circle me-2"></i>
+                                <span>Lê Trần Huy</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-lg-3 mb-4">
+                <h5 class="text-white mb-4">Quick Links</h5>
+                <ul class="list-unstyled footer-links">
+                    <li class="mb-2">
+                        <a href="{% url 'overall' %}" class="text-light text-decoration-none">
+                            <i class="bi bi-chevron-right me-2"></i>Model Overall
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'dashboard' %}" class="text-light text-decoration-none">
+                            <i class="bi bi-chevron-right me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'modelling' %}" class="text-light text-decoration-none">
+                            <i class="bi bi-chevron-right me-2"></i>Modeling
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="col-lg-3 mb-4">
+                <h5 class="text-white mb-4">Contact Info</h5>
+                <ul class="list-unstyled contact-info">
+                    <li class="mb-3">
+                        <i class="bi bi-geo-alt me-2"></i>
+                        <span>UIT, Thủ Đức, TP.HCM</span>
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-envelope me-2"></i>
+                        <a href="mailto:nguyenatn2003@gmail.com" class="text-light text-decoration-none">nguyenatn2003@gmail.com</a>
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-telephone me-2"></i>
+                        <span>(+84) 123-456-789</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <hr class="bg-light">
+                <p class="text-center mb-0">
+                    © 2024 Human Age Prediction. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+/* Style cho footer */
+.footer {
+    background-color: #212529;
+    color: #fff;
+}
+
+/* Style cho team members */
+.team-members li {
+    transition: all 0.3s ease;
+}
+
+.team-members li:hover {
+    transform: translateX(5px);
+    color: var(--primary);
+}
+
+/* Style cho footer links */
+.footer-links li a {
+    transition: all 0.3s ease;
+}
+
+.footer-links li a:hover {
+    color: var(--primary) !important;
+    transform: translateX(5px);
+}
+
+/* Style cho contact info */
+.contact-info li {
+    display: flex;
+    align-items: center;
+}
+
+.contact-info li i {
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+.contact-info li a:hover {
+    color: var(--primary) !important;
+}
+
+/* Style cho copyright */
+hr.bg-light {
+    opacity: 0.1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .footer h5 {
+        margin-top: 1.5rem;
+    }
+}
+.footer{
+    padding-bottom: 1rem !important;
+}
+</style> 

@@ -300,27 +300,25 @@
 
     /* Style cho range value input */
     .range-value-input {
-        border: 1px solid #ced4da;
-        font-weight: 500;  /* Làm đậm số */
-        width: 70px;
+        width: 60px;
+        padding: 2px 5px;
         text-align: center;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 0.9rem;
     }
 
     .range-value-input:focus {
-        border-color: #98DDA0;
-        box-shadow: 0 0 0 0.2rem rgba(152, 221, 160, 0.25);
-    }
-
-    /* Hover effect cho input */
-    .form-control:hover, .form-select:hover {
-        border-color: #adb5bd;  /* Màu đậm hơn khi hover */
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(238, 199, 59, 0.25);
+        outline: none;
     }
 
     /* Style cho range input group */
     .range-input-group {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.5rem;
     }
 
     .range-input-group .form-range {
@@ -367,63 +365,52 @@
         color: #212529;
     }
 
-    /* Style cho loading dots animation */
-    .loading-dots {
-        display: inline-flex;
-        align-items: center;
+   
+    
+
+    /* Thêm style cho invalid input */
+    .form-control.is-invalid-custom {
+        border-color: #dc3545;
+    }
+    
+    .invalid-feedback-custom {
+        display: none;
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
     }
 
-    .loading-dots .dot {
-        width: 5px;
-        height: 5px;
-        margin: 0 2px;
-        background: currentColor;
-        border-radius: 50%;
-        animation: dot-flashing 1s infinite linear alternate;
+    .form-control.is-invalid-custom + .invalid-feedback-custom {
+        display: block;
     }
 
-    .loading-dots .dot:nth-child(2) {
-        animation-delay: 0.2s;
+    /* Animation cho error message */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
-    .loading-dots .dot:nth-child(3) {
-        animation-delay: 0.4s;
+    .invalid-feedback-custom {
+        animation: fadeIn 0.3s ease-in;
     }
 
-    /* Style cho loading text */
-    .loading-text {
+    /* Thêm style cho blood pressure input */
+    .blood-pressure-group {
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 4px;
+        gap: 0.5rem;
     }
 
-    @keyframes dot-flashing {
-        0% {
-            opacity: 0.2;
-            transform: scale(0.8);
-        }
-        100% {
-            opacity: 1;
-            transform: scale(1);
-        }
+    .blood-pressure-group input {
+        width: 70px;
+        text-align: center;
     }
 
-    /* Style cho button khi loading/disabled */
-    .btn:disabled {
-        cursor: not-allowed !important;
-        background-color: #6c757d !important;
-        border-color: #6c757d !important;
-        color: #fff !important;
-        opacity: 0.65;
-        transform: none !important;
-        box-shadow: none !important;
-    }
-
-    /* Hiệu ứng hover cho button */
-    .btn-primary:not(:disabled):hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(216, 152, 16, 0.2);
+    .blood-pressure-separator {
+        font-size: 1.2rem;
+        color: #6c757d;
+        margin: 0 2px;
+        user-select: none;
     }
  
     </style>
@@ -534,8 +521,8 @@
                         <select class="form-select {% if errors.gender %}is-invalid{% endif %}" 
                                 name="gender" required>
                             <option value="">Select gender</option>
-                            <option value="Female" {% if form_data.gender == "Female" %}selected{% endif %}>Female</option>
                             <option value="Male" {% if form_data.gender == "Male" %}selected{% endif %}>Male</option>
+                            <option value="Female" {% if form_data.gender == "Female" %}selected{% endif %}>Female</option>
                         </select>
                         {% if errors.gender %}
                         <div class="error-feedback">{{ errors.gender }}</div>
@@ -544,21 +531,18 @@
                     <div class="col-md-4">
                         <label class="form-label">Height (cm)</label>
                         <input type="number" 
-                               class="form-control {% if errors.height %}is-invalid{% endif %}" 
+                               class="form-control" 
                                name="height" 
-                               step="0.01" 
                                required 
                                value="{{ form_data.height|default:'' }}">
-                        {% if errors.height %}
-                        <div class="error-feedback">{{ errors.height }}</div>
-                        {% endif %}
+                        <div class="invalid-feedback-custom"></div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Weight (kg)</label>
                         <input type="number" 
                                class="form-control {% if errors.weight %}is-invalid{% endif %}" 
                                name="weight" 
-                               step="0.01" 
+
                                required
                                value="{{ form_data.weight|default:'' }}">
                         {% if errors.weight %}
@@ -573,41 +557,53 @@
                 <h2 class="text-xl font-semibold">Health Metrics</h2>
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Blood Pressure (s/d)</label>
-                        <input type="text" 
-                               class="form-control {% if errors.bloodPressure %}is-invalid{% endif %}" 
-                               name="bloodPressure" 
-                               placeholder="e.g., 120/80" 
-                               required
-                               value="{{ form_data.bloodPressure|default:'' }}">
-                        {% if errors.bloodPressure %}
-                        <div class="error-feedback">{{ errors.bloodPressure }}</div>
-                        {% endif %}
+                        <label class="form-label">Blood Pressure (Systolic/Diastolic)</label>
+                        <div class="blood-pressure-group">
+                            <input type="number" 
+                                   class="form-control" 
+                                   name="systolic" 
+                                   placeholder="Sys"
+                                   min="0" 
+                                   required>
+                            <span class="blood-pressure-separator">/</span>
+                            <input type="number" 
+                                   class="form-control" 
+                                   name="diastolic" 
+                                   placeholder="Diastolic"
+                                   min="0" 
+                                   required>
+                            <input type="hidden" name="bloodPressure" value="120/80">
+                            <div class="invalid-feedback-custom"></div>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Cholesterol Level (mg/dL)</label>
-                        <input type="number" class="form-control" name="cholesterol" step="0.01" required
+                        <input type="number" class="form-control" name="cholesterol"  required 
                                value="{{ form_data.cholesterol|default:'' }}">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">BMI</label>
-                        <input type="number" class="form-control" name="bmi" step="0.01" required>
+                        <input type="number" class="form-control" name="bmi" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Blood Glucose Level (mg/dL)</label>
-                        <input type="number" class="form-control" name="bloodGlucose" step="0.01" required>
+                        <input type="number" class="form-control" name="bloodGlucose"  required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Bone Density (g/cm²)</label>
-                        <input type="number" class="form-control" name="boneDensity" step="0.0001" required>
+                        <input type="number" 
+                               class="form-control" 
+                               name="boneDensity" 
+                               min="-1"
+                               required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Vision Sharpness</label>
-                        <input type="number" class="form-control" name="visionSharpness" step="0.01" required>
+                        <input type="number" class="form-control" name="visionSharpness" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Hearing Ability (dB)</label>
-                        <input type="number" class="form-control" name="hearingAbility" step="0.01" required>
+                        <input type="number" class="form-control" name="hearingAbility" required>
                     </div>
                 </div>
             </div>
@@ -620,8 +616,8 @@
                         <label class="form-label">Physical Activity Level</label>
                         <select class="form-select" name="physicalActivity" required>
                             <option value="">Select level</option>
-                            <option value="Low" {% if form_data.physicalActivity == "Low" %}selected{% endif %}>Low</option>
                             <option value="Moderate" {% if form_data.physicalActivity == "Moderate" %}selected{% endif %}>Moderate</option>
+                            <option value="Low" {% if form_data.physicalActivity == "Low" %}selected{% endif %}>Low</option>
                             <option value="High" {% if form_data.physicalActivity == "High" %}selected{% endif %}>High</option>
                         </select>
                     </div>
@@ -629,28 +625,27 @@
                         <label class="form-label">Smoking Status</label>
                         <select class="form-select" name="smokingStatus" required>
                             <option value="">Select status</option>
-                            <option value="Never">Never</option>
-                            <option value="Former">Former</option>
-                            <option value="Current">Current</option>
+                            <option value="Former" {% if form_data.smokingStatus == "Former" %}selected{% endif %}>Former</option>
+                            <option value="Current" {% if form_data.smokingStatus == "Current" %}selected{% endif %}>Current</option>
+                            <option value="Never" {% if form_data.smokingStatus == "Never" %}selected{% endif %}>Never</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Alcohol Consumption</label>
                         <select class="form-select" name="alcoholConsumption" required>
                             <option value="">Select consumption</option>
-                            <option value="Never">Never</option>
-                            <option value="Occasional">Occasional</option>
-                            <option value="Frequent">Frequent</option>
+                            <option value="Occasional" {% if form_data.alcoholConsumption == "Occasional" %}selected{% endif %}>Occasional</option>
+                            <option value="Frequent" {% if form_data.alcoholConsumption == "Frequent" %}selected{% endif %}>Frequent</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Diet</label>
                         <select class="form-select" name="diet" required>
                             <option value="">Select diet</option>
-                            <option value="Balanced">Balanced</option>
-                            <option value="High-fat">High-fat</option>
-                            <option value="Low-fat">Low-fat</option>
-                            <option value="Vegetarian">Vegetarian</option>
+                            <option value="Low-carb" {% if form_data.diet == "Low-carb" %}selected{% endif %}>Low-carb</option>
+                            <option value="Balanced" {% if form_data.diet == "Balanced" %}selected{% endif %}>Balanced</option>
+                            <option value="Vegetarian" {% if form_data.diet == "Vegetarian" %}selected{% endif %}>Vegetarian</option>
+                            <option value="High-fat" {% if form_data.diet == "High-fat" %}selected{% endif %}>High-fat</option>
                         </select>
                     </div>
                 </div>
@@ -663,25 +658,27 @@
                     <div class="col-md-12">
                         <label class="form-label">Chronic Diseases</label>
                         <select class="form-select" name="chronicDiseases" required>
-                            <option value="None">None</option>
-                            <option value="Hypertension">Hypertension</option>
-                            <option value="Diabetes">Diabetes</option>
-                            <option value="Heart Disease">Heart Disease</option>
+                            <option value="">Select disease</option>
+                            <option value="Hypertension" {% if form_data.chronicDiseases == "Hypertension" %}selected{% endif %}>Hypertension</option>
+                            <option value="Diabetes" {% if form_data.chronicDiseases == "Diabetes" %}selected{% endif %}>Diabetes</option>
+                            <option value="Heart Disease" {% if form_data.chronicDiseases == "Heart Disease" %}selected{% endif %}>Heart Disease</option>
                         </select>
                     </div>
                     <div class="col-md-12">
                         <label class="form-label">Medication Use</label>
                         <select class="form-select" name="medicationUse" required>
-                            <option value="No">No</option>
-                            <option value="Yes">Yes</option>
+                            <option value="">Select medication use</option>
+                            <option value="Regular" {% if form_data.medicationUse == "Regular" %}selected{% endif %}>Regular</option>
+                            <option value="Occasional" {% if form_data.medicationUse == "Occasional" %}selected{% endif %}>Occasional</option>
                         </select>
                     </div>
                     <div class="col-md-12">
                         <label class="form-label">Family History</label>
                         <select class="form-select" name="familyHistory" required>
-                            <option value="None">None</option>
-                            <option value="Diabetes">Diabetes</option>
-                            <option value="Heart Disease">Heart Disease</option>
+                            <option value="">Select family history</option>
+                            <option value="Hypertension" {% if form_data.familyHistory == "Hypertension" %}selected{% endif %}>Hypertension</option>
+                            <option value="Diabetes" {% if form_data.familyHistory == "Diabetes" %}selected{% endif %}>Diabetes</option>
+                            <option value="Heart Disease" {% if form_data.familyHistory == "Heart Disease" %}selected{% endif %}>Heart Disease</option>
                         </select>
                     </div>
                 </div>
@@ -695,30 +692,31 @@
                         <label class="form-label">Cognitive Function (0-100)</label>
                         <div class="range-input-group">
                             <input type="range" class="form-range" name="cognitiveFunction" 
-                                   min="0" max="100" step="1" required
+                                   min="0" max="100" step="0.01"  
+                                required
                                    value="{{ form_data.cognitiveFunction|default:'50' }}">
-                            <input type="number" class="form-control range-value-input" 
-                                   value="{{ form_data.cognitiveFunction|default:'50' }}"
-                                   min="0" max="100" step="1">
+                            <input type="number" class="range-value-input" 
+                                   min="0" max="100" step="0.01"
+                                   value="{{ form_data.cognitiveFunction|default:'50' }}">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Mental Health Status</label>
                         <select class="form-select" name="mentalHealthStatus" required>
                             <option value="">Select status</option>
-                            <option value="Poor">Poor</option>
-                            <option value="Fair">Fair</option>
-                            <option value="Good">Good</option>
-                            <option value="Excellent">Excellent</option>
+                            <option value="Good" {% if form_data.mentalHealthStatus == "Good" %}selected{% endif %}>Good</option>
+                            <option value="Poor" {% if form_data.mentalHealthStatus == "Poor" %}selected{% endif %}>Poor</option>
+                            <option value="Fair" {% if form_data.mentalHealthStatus == "Fair" %}selected{% endif %}>Fair</option>
+                            <option value="Excellent" {% if form_data.mentalHealthStatus == "Excellent" %}selected{% endif %}>Excellent</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Sleep Patterns</label>
                         <select class="form-select" name="sleepPatterns" required>
                             <option value="">Select pattern</option>
-                            <option value="Normal">Normal</option>
-                            <option value="Insomnia">Insomnia</option>
-                            <option value="Sleep Apnea">Sleep Apnea</option>
+                            <option value="Insomnia" {% if form_data.sleepPatterns == "Insomnia" %}selected{% endif %}>Insomnia</option>
+                            <option value="Normal" {% if form_data.sleepPatterns == "Normal" %}selected{% endif %}>Normal</option>
+                            <option value="Excessive" {% if form_data.sleepPatterns == "Excessive" %}selected{% endif %}>Excessive</option>
                         </select>
                     </div>
                 </div>
@@ -731,31 +729,40 @@
                     <div class="col-md-4">
                         <label class="form-label">Stress Levels (0-10)</label>
                         <div class="range-input-group">
-                            <input type="range" class="form-range" name="stressLevels" min="0" max="10" step="0.1" required
+                            <input type="range" class="form-range" name="stressLevels" 
+                                   min="0" max="10" step="0.01" 
+                                    required
                                    value="{{ form_data.stressLevels|default:'5' }}">
-                            <input type="number" class="form-control range-value-input" 
-                                   value="{{ form_data.stressLevels|default:'5' }}"
-                                   min="0" max="10" step="0.1">
+                            <input type="number" class="range-value-input" 
+                                   min="0" max="10" step="0.01"
+                                   
+                                   value="{{ form_data.stressLevels|default:'5' }}">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Pollution Exposure (0-10)</label>
                         <div class="range-input-group">
-                            <input type="range" class="form-range" name="pollutionExposure" min="0" max="10" step="0.1" required
+                            <input type="range" class="form-range" name="pollutionExposure" 
+                                   min="0" max="10" step="0.01" 
+                                    required
                                    value="{{ form_data.pollutionExposure|default:'5' }}">
-                            <input type="number" class="form-control range-value-input" 
-                                   value="{{ form_data.pollutionExposure|default:'5' }}"
-                                   min="0" max="10" step="0.1">
+                            <input type="number" class="range-value-input" 
+                                   min="0" max="10" step="0.01" 
+                                   
+                                   value="{{ form_data.pollutionExposure|default:'5' }}">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Sun Exposure (0-12)</label>
                         <div class="range-input-group">
-                            <input type="range" class="form-range" name="sunExposure" min="0" max="12" step="0.1" required
+                            <input type="range" class="form-range" name="sunExposure" 
+                                   min="0" max="12" step="0.01" 
+                                    required
                                    value="{{ form_data.sunExposure|default:'6' }}">
-                            <input type="number" class="form-control range-value-input" 
-                                   value="{{ form_data.sunExposure|default:'6' }}"
-                                   min="0" max="12" step="0.1">
+                            <input type="number" class="range-value-input" 
+                                   min="0" max="12" step="0.01" 
+                                   
+                                   value="{{ form_data.sunExposure|default:'6' }}">
                         </div>
                     </div>
                 </div>
@@ -769,18 +776,18 @@
                         <label class="form-label">Education Level</label>
                         <select class="form-select" name="educationLevel" required>
                             <option value="">Select level</option>
-                            <option value="High School">High School</option>
-                            <option value="Undergraduate">Undergraduate</option>
-                            <option value="Graduate">Graduate</option>
+                            <option value="Undergraduate" {% if form_data.educationLevel == "Undergraduate" %}selected{% endif %}>Undergraduate</option>
+                            <option value="High School" {% if form_data.educationLevel == "High School" %}selected{% endif %}>High School</option>
+                            <option value="Postgraduate" {% if form_data.educationLevel == "Postgraduate" %}selected{% endif %}>Postgraduate</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Income Level</label>
                         <select class="form-select" name="incomeLevel" required>
                             <option value="">Select level</option>
-                            <option value="Low">Low</option>
-                            <option value="Medium">Medium</option>
-                            <option value="High">High</option>
+                            <option value="Medium" {% if form_data.incomeLevel == "Medium" %}selected{% endif %}>Medium</option>
+                            <option value="Low" {% if form_data.incomeLevel == "Low" %}selected{% endif %}>Low</option>
+                            <option value="High" {% if form_data.incomeLevel == "High" %}selected{% endif %}>High</option>
                         </select>
                     </div>
                 </div>
@@ -788,8 +795,8 @@
 
             <!-- Submit Button -->
             <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg px-5 text-white" id="predictBtn">
-                    <span class="normal-text">Predict</span>
+                <button type="submit" class="btn btn-primary btn-lg px-5" id="predictBtn">
+                    <span class="normal-text text-white">Predict</span>
                     <span class="loading-text d-none">
                         Predicting
                         <span class="loading-dots ms-2">
@@ -835,7 +842,7 @@
         // Cập nhật input khi kéo slider
         rangeInput.addEventListener('input', function() {
             const value = parseFloat(this.value);
-            valueInput.value = value;
+            valueInput.value = value; // Không làm tròn, giữ nguyên giá trị thập phân
         });
 
         // Cập nhật slider khi nhập số
@@ -843,18 +850,12 @@
             const value = parseFloat(this.value);
             const min = parseFloat(rangeInput.min);
             const max = parseFloat(rangeInput.max);
-            const step = parseFloat(rangeInput.step) || 1;
 
-            // Chỉ cập nhật khi là số hợp lệ
             if (!isNaN(value)) {
                 // Giới hạn trong khoảng min-max
                 const limitedValue = Math.min(Math.max(value, min), max);
-                // Làm tròn theo step
-                const roundedValue = Math.round(limitedValue / step) * step;
-                
-                // Cập nhật cả hai input
-                rangeInput.value = roundedValue;
-                this.value = roundedValue;
+                rangeInput.value = limitedValue;
+                this.value = limitedValue; // Giữ nguyên giá trị thập phân
             }
         });
 
@@ -863,44 +864,320 @@
             const value = parseFloat(this.value);
             const min = parseFloat(rangeInput.min);
             const max = parseFloat(rangeInput.max);
-            const step = parseFloat(rangeInput.step) || 1;
 
-            let finalValue;
-            if (isNaN(value) || value < min) {
-                finalValue = min;
+            if (isNaN(value)) {
+                this.value = min;
+                rangeInput.value = min;
+            } else if (value < min) {
+                this.value = min;
+                rangeInput.value = min;
             } else if (value > max) {
-                finalValue = max;
-            } else {
-                // Làm tròn theo step
-                finalValue = Math.round(value / step) * step;
+                this.value = max;
+                rangeInput.value = max;
             }
-
-            // Cập nhật cả hai input với giá trị cuối cùng
-            this.value = finalValue;
-            rangeInput.value = finalValue;
         });
     });
 
-    // Handle form submission and loading state
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const button = document.getElementById('predictBtn');
-        const normalText = button.querySelector('.normal-text');
-        const loadingText = button.querySelector('.loading-text');
-        
-        // Disable button và hiện loading
-        button.disabled = true;
-        normalText.classList.add('d-none');
-        loadingText.classList.remove('d-none');
-        
-        // Nếu có lỗi thì enable lại button sau 3s
-        setTimeout(() => {
-            if (document.querySelector('.alert-danger')) {
-                button.disabled = false;
-                normalText.classList.remove('d-none');
-                loadingText.classList.add('d-none');
+    // Gộp tất cả xử lý form submit vào một đoạn code
+    document.addEventListener('DOMContentLoaded', function() {
+        // Xử lý form submit
+        document.querySelector('form').addEventListener('submit', function(e) {
+            let isValid = true;
+            const button = document.getElementById('predictBtn');
+            const normalText = button.querySelector('.normal-text');
+            const loadingText = button.querySelector('.loading-text');
+            
+            // 1. Validate tất cả input number
+            this.querySelectorAll('input[type="number"]:not(.range-value-input)').forEach(function(input) {
+                if (!validateNumberInput(input)) {
+                    isValid = false;
+                }
+            });
+
+            // 2. Validate blood pressure
+            const systolicInput = document.querySelector('input[name="systolic"]');
+            const diastolicInput = document.querySelector('input[name="diastolic"]');
+            const isValidSystolic = validateBP(systolicInput, true);
+            const isValidDiastolic = validateBP(diastolicInput, false);
+            
+            if (!isValidSystolic || !isValidDiastolic) {
+                isValid = false;
             }
-        }, 3000);
+
+            // 3. Nếu có lỗi validation
+            if (!isValid) {
+                e.preventDefault();
+                // Scroll đến input lỗi đầu tiên
+                const firstInvalidInput = document.querySelector('.is-invalid-custom');
+                if (firstInvalidInput) {
+                    firstInvalidInput.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }
+                return;
+            }
+
+            // 4. Đảm bảo cập nhật giá trị blood pressure trước khi submit
+            updateBloodPressure();
+
+            // 5. Nếu form hợp lệ, hiển thị loading state
+            button.disabled = true;
+            normalText.classList.add('d-none');
+            loadingText.classList.remove('d-none');
+            
+            // 6. Nếu có lỗi thì enable lại button sau 3s
+            setTimeout(() => {
+                if (document.querySelector('.alert-danger')) {
+                    button.disabled = false;
+                    normalText.classList.remove('d-none');
+                    loadingText.classList.add('d-none');
+                }
+            }, 3000);
+        });
     });
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.range-input-group').forEach(function(group) {
+            const rangeInput = group.querySelector('.form-range');
+            const valueInput = group.querySelector('.range-value-input');
+
+            // Đồng bộ giá trị ban đầu
+            valueInput.value = rangeInput.value;
+
+            // Cập nhật input khi kéo slider
+            rangeInput.addEventListener('input', function() {
+                const value = parseFloat(this.value);
+                valueInput.value = value; // Không làm tròn, giữ nguyên giá trị thập phân
+            });
+
+            // Cập nhật slider khi nhập số
+            valueInput.addEventListener('input', function() {
+                const value = parseFloat(this.value);
+                const min = parseFloat(rangeInput.min);
+                const max = parseFloat(rangeInput.max);
+
+                if (!isNaN(value)) {
+                    // Giới hạn trong khoảng min-max
+                    const limitedValue = Math.min(Math.max(value, min), max);
+                    rangeInput.value = limitedValue;
+                    this.value = limitedValue; // Giữ nguyên giá trị thập phân
+                }
+            });
+
+            // Xử lý khi blur khỏi input
+            valueInput.addEventListener('blur', function() {
+                const value = parseFloat(this.value);
+                const name = this.name;
+                
+                // Chỉ set giá trị mặc định khi input trống hoặc không phải là số
+                if (this.value === '' || isNaN(value)) {
+                    if (name === 'boneDensity') {
+                        this.value = -1;
+                    } else {
+                        this.value = 1; // hoặc giá trị mặc định phù hợp khác
+                    }
+                    validateNumberInput(this);
+                }
+            });
+        });
+    });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Validate tất cả input number (trừ slider và range-value-input)
+        document.querySelectorAll('input[type="number"]:not(.range-value-input)').forEach(function(input) {
+            // Thêm div feedback nếu chưa có
+            if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('invalid-feedback-custom')) {
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.className = 'invalid-feedback-custom';
+                input.parentNode.insertBefore(feedbackDiv, input.nextSibling);
+            }
+
+            // Validate khi nhập
+            input.addEventListener('input', function() {
+                validateNumberInput(this);
+            });
+
+            // Validate khi blur
+            input.addEventListener('blur', function() {
+                const value = parseFloat(this.value);
+                const name = this.name;
+                
+                // Chỉ set giá trị mặc định khi input trống hoặc không phải là số
+                if (this.value === '' || isNaN(value)) {
+                    if (name === 'boneDensity') {
+                        this.value = -1;
+                    } else {
+                        this.value = 1; // hoặc giá trị mặc định phù hợp khác
+                    }
+                    validateNumberInput(this);
+                }
+            });
+        });
+
+        function validateNumberInput(input) {
+            const value = parseFloat(input.value);
+            const name = input.name;
+            const feedbackDiv = input.nextElementSibling;
+            let isValid = true;
+            let errorMessage = '';
+
+            if (isNaN(value)) {
+                isValid = false;
+                errorMessage = 'Please enter a valid number';
+            } else if (name === 'boneDensity') {
+                if (value < -1) {
+                    isValid = false;
+                    errorMessage = 'Bone Density must be greater than or equal to -1';
+                }
+            } else {
+                if (value <= 0) {
+                    isValid = false;
+                    switch(name) {
+                        case 'height':
+                            errorMessage = 'Height must be greater than 0 cm';
+                            break;
+                        case 'weight':
+                            errorMessage = 'Weight must be greater than 0 kg';
+                            break;
+                        case 'cholesterol':
+                            errorMessage = 'Cholesterol must be greater than 0 mg/dL';
+                            break;
+                        case 'bmi':
+                            errorMessage = 'BMI must be greater than 0';
+                            break;
+                        case 'bloodGlucose':
+                            errorMessage = 'Blood Glucose must be greater than 0 mg/dL';
+                            break;
+                        case 'visionSharpness':
+                            errorMessage = 'Vision Sharpness must be greater than 0';
+                            break;
+                        case 'hearingAbility':
+                            errorMessage = 'Hearing Ability must be greater than 0 dB';
+                            break;
+                        default:
+                            errorMessage = 'Value must be greater than 0';
+                    }
+                }
+            }
+
+            // Hiển thị/ẩn thông báo lỗi
+            if (!isValid) {
+                input.classList.add('is-invalid-custom');
+                if (feedbackDiv) {
+                    feedbackDiv.textContent = errorMessage;
+                    feedbackDiv.style.display = 'block';
+                }
+            } else {
+                input.classList.remove('is-invalid-custom');
+                if (feedbackDiv) {
+                    feedbackDiv.style.display = 'none';
+                }
+            }
+
+            return isValid;
+        }
+
+        // Validate form trước khi submit
+        // document.querySelector('form').addEventListener('submit', function(e) {
+        //     let isValid = true;
+            
+        //     // Validate tất cả input number
+        //     this.querySelectorAll('input[type="number"]:not(.range-value-input)').forEach(function(input) {
+        //         if (!validateNumberInput(input)) {
+        //             isValid = false;
+        //         }
+        //     });
+
+        //     if (!isValid) {
+        //         e.preventDefault(); // Ngăn form submit nếu có lỗi
+        //         // Scroll đến input lỗi đầu tiên
+        //         const firstInvalidInput = document.querySelector('.is-invalid-custom');
+        //         if (firstInvalidInput) {
+        //             firstInvalidInput.scrollIntoView({ 
+        //                 behavior: 'smooth', 
+        //                 block: 'center' 
+        //             });
+        //         }
+        //     }
+        // });
+    });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const systolicInput = document.querySelector('input[name="systolic"]');
+        const diastolicInput = document.querySelector('input[name="diastolic"]');
+        const hiddenBPInput = document.querySelector('input[name="bloodPressure"]');
+        
+        // Function để update hidden input
+        function updateBloodPressure() {
+            const systolic = systolicInput.value || '120';
+            const diastolic = diastolicInput.value || '80';
+            hiddenBPInput.value = `${systolic}/${diastolic}`;
+        }
+
+        // Gọi updateBloodPressure ngay khi trang load
+        updateBloodPressure();
+
+        // Event listeners
+        systolicInput.addEventListener('input', function() {
+            validateBP(this, true);
+            updateBloodPressure();
+        });
+
+        diastolicInput.addEventListener('input', function() {
+            validateBP(this, false);
+            updateBloodPressure();
+        });
+
+        // Validate khi blur
+        systolicInput.addEventListener('blur', function() {
+            if (this.value === '') this.value = '120';
+            validateBP(this, true);
+            updateBloodPressure();
+        });
+
+        diastolicInput.addEventListener('blur', function() {
+            if (this.value === '') this.value = '80';
+            validateBP(this, false);
+            updateBloodPressure();
+        });
+
+        // Validate và update khi nhập
+        function validateBP(input, isSystemic) {
+            const value = parseInt(input.value);
+            const min = 0;
+            const feedbackDiv = input.parentElement.querySelector('.invalid-feedback-custom');
+
+            if (isNaN(value) || value < min) {
+                input.classList.add('is-invalid-custom');
+                feedbackDiv.textContent = `${isSystemic ? 'Systolic' : 'Diastolic'} must be greater than ${min}`;
+                feedbackDiv.style.display = 'block';
+                return false;
+            } else {
+                input.classList.remove('is-invalid-custom');
+                feedbackDiv.style.display = 'none';
+                return true;
+            }
+        }
+
+        // Thêm validation cho form submit
+        // document.querySelector('form').addEventListener('submit', function(e) {
+        //     const isValidSystolic = validateBP(systolicInput, true);
+        //     const isValidDiastolic = validateBP(diastolicInput, false);
+            
+        //     if (!isValidSystolic || !isValidDiastolic) {
+        //         e.preventDefault();
+        //         systolicInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        //     }
+        //     // Đảm bảo cập nhật giá trị hidden input trước khi submit
+        //     updateBloodPressure();
+        // });
+    });
+    </script>
+           {% include 'includes/footer.html' %}
+
 </body>
 </html>

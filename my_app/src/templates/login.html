@@ -6,6 +6,8 @@
     <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    {% load static %}
+    <link href="{% static 'css/common.css' %}" rel="stylesheet">
     <style>
         /* Màu chủ đạo */
         :root {
@@ -77,85 +79,18 @@
             padding-top: 60px;
         }
 
-        /* Style cho loading spinner */
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+       
 
-        .spinner-border {
-            width: 1.2rem;
-            height: 1.2rem;
-            vertical-align: -0.125em;
-            border: 0.2em solid currentColor;
-            border-right-color: transparent;
-        }
-
-        /* Style cho button khi loading/disabled */
-        .btn:disabled {
-            cursor: not-allowed !important;
-            background-color: #6c757d !important;  /* Màu xám */
-            border-color: #6c757d !important;
-            color: #fff !important;
-            opacity: 0.65;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-
-        /* Hiệu ứng hover cho button */
-        .btn-primary:not(:disabled):hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(216, 152, 16, 0.2);
-        }
-
-        /* Style cho loading dots animation */
-        .loading-dots {
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .loading-dots .dot {
-            width: 5px;
-            height: 5px;
-            margin: 0 2px;
-            background: currentColor;
-            border-radius: 50%;
-            animation: dot-flashing 1s infinite linear alternate;
-        }
-
-        .loading-dots .dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .loading-dots .dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        /* Style cho loading text */
-        .loading-text {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-
-        @keyframes dot-flashing {
-            0% {
-                opacity: 0.2;
-                transform: scale(0.8);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
+       
     </style>
 </head>
 <body>
     <header class="header fixed-top">
         <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
-                <a class="navbar-brand" href="#">Your Logo</a>
+                <a class="navbar-brand" href="/"> <img src="{% static 'images/logo.jpg' %}" 
+                    alt="Logo" 
+                    style="max-height: 45px; width: auto;"><strong class="p-2 text-dark">Tobi</strong></a>
                 <div class="ms-auto">
                     <a href="/login" class="btn btn-primary">Login</a>
                     <a href="/register" class="btn btn-outline-secondary me-2">Register</a>

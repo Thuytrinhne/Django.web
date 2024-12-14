@@ -8,17 +8,393 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     {% load static %}
     <link href="{% static 'css/common.css' %}" rel="stylesheet">
+    <style>
+        .section {
+            padding: 60px 0;
+        }
+        .bg-light-gray {
+            background-color: #f8f9fa;
+        }
+        .model-card {
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+        .model-card:hover {
+            transform: translateY(-5px);
+        }
+        .feature-list {
+            columns: 2;
+            -webkit-columns: 2;
+            -moz-columns: 2;
+        }
+        .carousel-item {
+            padding: 20px;
+        }
+        .result-card {
+            border-left: 4px solid #474b94;
+        }
+        .custom-carousel {
+            width: 100%;
+            margin: 0 auto;
+        }
+        .bg-custom {
+            background-color: var(--primary-light);
+        }
+        .display-4{
+            font-weight: 400;
+            color: #313030;
+        }
+        .lead{
+            color: #4f4f4f;
+        }
+        /* Style cho navigation menu */
+        .nav-menu .btn-outline-primary {
+            color: var(--primary-dark);
+            border-color: var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-menu .btn-outline-primary:hover {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Offset for fixed header */
+        section {
+            scroll-margin-top: 80px;
+        }
+
+        /* Style cho dataset source button */
+        .dataset-source .btn {
+            border-color: var(--primary);
+            color: var(--primary-dark);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .dataset-source .btn:hover {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(238, 199, 59, 0.2);
+        }
+        
+        .dataset-source .bi-kaggle {
+            font-size: 1.2rem;
+        }
+
+        /* Style cho model number */
+        .model-number {
+            color: var(--primary);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        /* Style cho carousel indicators */
+        .carousel-indicators {
+            bottom: -50px;
+        }
+        
+        .carousel-indicators button {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-indicators button.active {
+            background-color: var(--primary);
+            opacity: 1;
+            transform: scale(1.2);
+        }
+        .alert-primary-custom
+        {
+            background-color: var(--primary-light);
+        }
+        .bg-gray-custom{
+            background-color: #818181 !important;
+        }
+        .bg-pri{
+            background: var(--primary) !important;
+        }
+        .alert-blue
+        {
+            background-color: #474b94 !important;
+            color:white;
+        }
+    </style>
 </head>
 <body>
     {% include 'includes/header.html' %}
 
     <div class="container mt-5">
-        <h1 class="text-center">Welcome to Model Overall</h1>
-        <p class="text-center">This is where your model overview content would go.</p>
+
+
+      <!-- Hero Section -->
+      <div class="bg-custom text-white py-5">
+          <div class="container">
+              <h1 class="display-4">Human Age Prediction Model</h1>
+              <p class="lead">Advanced models for predicting age based on health and lifestyle factors</p>
+          </div>
+      </div>
+       <!-- Navigation Menu -->
+       <div class="nav-menu mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Quick Navigation</h5>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="#dataset" class="btn btn-outline-primary btn-sm">Dataset Overview</a>
+                    <a href="#input-output" class="btn btn-outline-primary btn-sm">Model Input & Output</a>
+                    <a href="#models" class="btn btn-outline-primary btn-sm">Models Usage</a>
+                    <a href="#results" class="btn btn-outline-primary btn-sm">Results & Performance</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+      <!-- Dataset Introduction -->
+      <section id="dataset" class="section">
+          <div class="container">
+              <h2 class="mb-4">Dataset Overview</h2>
+              <div class="row">
+                  <div class="col-md-8">
+                      <p class="lead">The Human Age Prediction Synthetic Dataset contains 3,000 samples with <strong>24</strong> features related to health and lifestyle factors.</p>
+                      <div class="dataset-source mt-2 mb-4">
+                          <a href="https://www.kaggle.com/datasets/abdullah0a/human-age-prediction-synthetic-dataset" 
+                             target="_blank" 
+                             class="btn btn-outline-primary">
+                              <i class="bi bi-kaggle me-2"></i>View Dataset on Kaggle
+                          </a>
+                      </div>
+                      <h4 class="mt-4">Key Features:</h4>
+                      <ul class="feature-list">
+                          <li>Height (cm)</li>
+                          <li>Weight (kg)</li>
+                          <li>Blood Pressure</li>
+                          <li>Cholesterol Level</li>
+                          <li>BMI</li>
+                          <li>Blood Glucose Level</li>
+                          <li>Physical Activity</li>
+                          <li>Smoking Status</li>
+                      </ul>
+                  </div>
+                  <div class="col-md-4">
+                      <div class="card">
+                          <div class="card-body">
+                              <h5 class="card-title">Dataset Statistics</h5>
+                              <ul class="list-unstyled">
+                                  <li>🔢 Samples: 3,000</li>
+                                  <li>📊 Features: 24</li>
+                                  <li>🎯 Target: Age (years)</li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      <!-- Input/Output -->
+      <section id="input-output" class="section bg-light-gray">
+          <div class="container">
+              <h2 class="mb-4">Model Input & Output</h2>
+              <div class="row">
+                  <div class="col-md-6">
+                      <div class="card h-100">
+                          <div class="card-body">
+                              <h4 class="card-title">Input Features</h4>
+                              <p>The model accepts <strong>24</strong> different health and lifestyle parameters including:</p>
+                              <ul>
+                                  <li>Physical measurements (height, weight, BMI)</li>
+                                  <li>Health indicators (blood pressure, cholesterol)</li>
+                                  <li>Lifestyle factors (smoking, alcohol consumption)</li>
+                                  <li>Environmental factors (pollution exposure)</li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="card h-100">
+                          <div class="card-body">
+                              <h4 class="card-title">Output Prediction</h4>
+                              <p>The model predicts:</p>
+                              <div class="alert alert-blue">
+                                  <strong>Age (years)</strong>
+                                  <p class="mb-0">A continuous numerical value representing the predicted age of the individual based on their health and lifestyle factors.</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      <!-- Models Comparison -->
+      <section id="models" class="section">
+          <div class="container">
+              <h2 class="mb-4">Models Usages (4)</h2>
+              <div id="modelCarousel" class="carousel slide custom-carousel" data-bs-ride="carousel">
+                  
+                  <div class="carousel-inner">
+                      <div class="carousel-item active">
+                          <div class="card model-card">
+                              <div class="card-body">
+                                  <h4><span class="model-number">1.</span> Artificial Neural Network (ANN)</h4>
+                                  <p>Deep learning model with complex pattern recognition</p>
+                                  <div class="model-architecture mb-3">
+                                      <img src="{% static 'images/ANN.jpg' %}" 
+                                           alt="ANN Architecture" 
+                                           class="img-fluid rounded shadow-sm"
+                                           style="max-height: 300px; width: auto;">
+                                  </div>
+                                  
+                              </div>
+                          </div>
+                      </div>
+                      <div class="carousel-item">
+                          <div class="card model-card">
+                              <div class="card-body">
+                                  <h4><span class="model-number">2.</span> Decision Tree</h4>
+                                  <p>Tree-based model for interpretable predictions</p>
+                                  <div class="model-architecture mb-3">
+                                      <img src="{% static 'images/decision_tree.jpg' %}" 
+                                           alt="Decision Tree Architecture" 
+                                           class="img-fluid rounded shadow-sm"
+                                           style="max-height: 300px; width: auto;">
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="carousel-item">
+                          <div class="card model-card">
+                              <div class="card-body">
+                                  <h4><span class="model-number">3.</span> Linear Regression</h4>
+                                  <p>Basic linear model for baseline comparison</p>
+                                  <div class="model-architecture mb-3">
+                                      <img src="{% static 'images/linear.jpg' %}" 
+                                           alt="Linear Regression Architecture" 
+                                           class="img-fluid rounded shadow-sm"
+                                           style="max-height: 300px; width: auto;">
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="carousel-item">
+                          <div class="card model-card">
+                              <div class="card-body">
+                                  <h4><span class="model-number">4.</span> Random Forest</h4>
+                                  <p>Ensemble model combining multiple decision trees</p>
+                                  <div class="model-architecture mb-3">
+                                      <img src="{% static 'images/random_forest.jpg' %}" 
+                                           alt="Random Forest Architecture" 
+                                           class="img-fluid rounded shadow-sm"
+                                           style="max-height: 300px; width: auto;">
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#modelCarousel" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#modelCarousel" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                  </button>
+              </div>
+          </div>
+      </section>
+
+      <!-- Results -->
+      <section id="results" class="section bg-light-gray">
+          <div class="container">
+              <h2 class="mb-4">Results & Performance</h2>
+              <div class="row">
+                  <div class="col-md-8 mx-auto">
+                      <div class="card result-card">
+                          <div class="card-body">
+                              <h4 class="card-title">Model Performance Summary</h4>
+                              <p class="lead">Our models achieved excellent performance in age prediction:</p>
+                              <ul class="list-group list-group-flush">
+                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                      Best R² Score
+                                      <span class="badge bg-pri rounded-pill">0.93-0.94 (ANN & Linear Regression)</span>
+                                  </li>
+                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Bad R² Score
+                                    <span class="badge bg-gray-custom rounded-pill">0.84-0.87 (Decision Tree)</span>
+                                </li>
+                                 
+                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                      Selected Model
+                                      <span class="badge bg-success rounded-pill">Linear Regression</span>
+                                  </li>
+                              </ul>
+                              <div class="alert alert-primary-custom mt-3">
+                                  <i class="bi bi-check-circle-fill"></i> The <strong>Linear Regression</strong> model was selected for deployment due to its balance of accuracy (R² > 0.9) and computational efficiency.
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </section>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% load static %}
     <script src="{% static 'js/common.js' %}"></script>
+    <script>
+        // Initialize carousel with auto-play
+        document.addEventListener('DOMContentLoaded', function() {
+            var myCarousel = document.querySelector('#modelCarousel')
+            var carousel = new bootstrap.Carousel(myCarousel, {
+                interval: 3000,
+                wrap: true
+            })
+        });
+
+        // Handle active state of navigation buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navButtons = document.querySelectorAll('.nav-menu .btn');
+            
+            function setActiveButton() {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= sectionTop - 150) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.getAttribute('href').slice(1) === current) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', setActiveButton);
+            setActiveButton();
+        });
+    </script>
+       {% include 'includes/footer.html' %}
 </body>
 </html>
