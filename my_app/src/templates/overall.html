@@ -134,6 +134,9 @@
             background-color: #474b94 !important;
             color:white;
         }
+        .text-red{
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -178,16 +181,22 @@
                               <i class="bi bi-kaggle me-2"></i>View Dataset on Kaggle
                           </a>
                       </div>
-                      <h4 class="mt-4">Key Features:</h4>
+                      <h4 class="mt-4">Features Affecting The Target</h4>
                       <ul class="feature-list">
-                          <li>Height (cm)</li>
-                          <li>Weight (kg)</li>
-                          <li>Blood Pressure</li>
                           <li>Cholesterol Level</li>
-                          <li>BMI</li>
                           <li>Blood Glucose Level</li>
-                          <li>Physical Activity</li>
+                          <li>Bone Density</li>
+                          <li>Vision Sharpness</li>
+                          <li>Hearing Ability</li>
                           <li>Smoking Status</li>
+                          <li>Cognitive Function</li>
+                          <li>Blood Pressure(Systolic/Diastolic)</li>
+
+                      </ul>
+                     <p><strong class="text-red">Note: </strong><br>1. Normalize the data using <strong>OneHotEncoder</strong>.
+                        <br>2. Split the dataset into features and target with a <strong>70:30</strong> ratio, where 70% is used to train the model and 30% is used for testing.</p>
+                        
+                    
                       </ul>
                   </div>
                   <div class="col-md-4">

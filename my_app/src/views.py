@@ -6,11 +6,8 @@ import requests
 import json
 
 def home_view(request):
-    # Kiểm tra xem user đã đăng nhập chưa
-    if 'user_id' in request.session:
-        return render(request, 'overall.html')
-    else:
-        return redirect('login')
+    return render(request, 'overall.html')
+    
 
 def login_view(request):
     if request.method == 'POST':
@@ -104,8 +101,6 @@ def dashboard_view(request):
     return render(request, 'dashboard.html')
 
 def overall_view(request):
-    if 'user_id' not in request.session:
-        return redirect('login')
     return render(request, 'overall.html')
 
 def modelling_view(request):

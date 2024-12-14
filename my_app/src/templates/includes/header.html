@@ -12,7 +12,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'overall' %}active{% endif %}" href="{% url 'overall' %}">Model Overall</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Model Overall</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
@@ -21,6 +21,7 @@
                         <a class="nav-link {% if request.resolver_match.url_name == 'modelling' %}active{% endif %}" href="{% url 'modelling' %}">Modeling</a>
                     </li>
                 </ul>
+                {% if 'user_id' in request.session %}
                 <div class="user-dropdown dropdown">
                     <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="{% static 'images/rj.jpg' %}" alt="RJ" class="user-avatar">
@@ -30,9 +31,16 @@
                         <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                     </ul>
                 </div>
+                {% else %}
+                <div class="ms-auto">
+                    <a href="/login" class="btn {% if request.resolver_match.url_name == 'login' %}btn-primary{% else %}btn-outline-secondary me-2{% endif %}">Login</a>
+                    <a href="/register" class="btn {% if request.resolver_match.url_name == 'register' %}btn-primary{% else %}btn-outline-secondary me-2{% endif %}">Register</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </nav>
+    
 </header>
 
 <style>
@@ -256,4 +264,37 @@
 .navbar-brand:hover img {
     transform: scale(1.05);
 }
+
+ /* Style cho primary button (Register) */
+ .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Style cho outline button (Login) */
+        .btn-outline-secondary {
+            color: var(--primary-dark);
+            border-color: var(--primary);
+            background-color: transparent;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--primary-light);
+            border-color: var(--primary);
+            color: #2C1810;
+            transform: translateY(-1px);
+        }
+
 </style> 
